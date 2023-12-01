@@ -1,7 +1,6 @@
 module Day1 where
 
 import Text.Megaparsec
-import Data.List
 
 import Util
 
