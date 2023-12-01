@@ -20,25 +20,19 @@ tokenP =
 
 token1_2P :: Parser Tok
 token1_2P =
-      N '1' <$ spelledNumber "one"
-  <|> N '2' <$ spelledNumber "two"
-  <|> N '3' <$ spelledNumber "three"
-  <|> N '4' <$ spelledNumber "four"
-  <|> N '5' <$ spelledNumber "five"
-  <|> N '6' <$ spelledNumber "six"
-  <|> N '7' <$ spelledNumber "seven"
-  <|> N '8' <$ spelledNumber "eight"
-  <|> N '9' <$ spelledNumber "nine"
+      N '1' <$ spelledDigit "one"
+  <|> N '2' <$ spelledDigit "two"
+  <|> N '3' <$ spelledDigit "three"
+  <|> N '4' <$ spelledDigit "four"
+  <|> N '5' <$ spelledDigit "five"
+  <|> N '6' <$ spelledDigit "six"
+  <|> N '7' <$ spelledDigit "seven"
+  <|> N '8' <$ spelledDigit "eight"
+  <|> N '9' <$ spelledDigit "nine"
   <|> C <$> oneOf ['a'..'z']
   <|> N <$> oneOf ['0'..'9']
   where
-  spelledNumber word = lookAhead (chunk word) *> takeP (Just "spelled number") 1
-
-day1P :: Parser [[Tok]]
-day1P = many (many tokenP <* single '\n') <* eof
-
-day1_2P :: Parser [[Tok]]
-day1_2P = many ((many token1_2P) <* single '\n') <* eof
+  spelledDigit word = lookAhead (chunk word) *> takeP (Just "spelled digit") 1
 
 ns :: [Tok] -> String
 ns toks = [n | N n <- toks]
@@ -47,3 +41,9 @@ evalLine :: [Tok] -> Int
 evalLine toks = read $ [head foo] <> [head (reverse foo)]
   where
   foo = ns toks
+
+day1P :: Parser [[Tok]]
+day1P = many (many tokenP <* single '\n') <* eof
+
+day1_2P :: Parser [[Tok]]
+day1_2P = many ((many token1_2P) <* single '\n') <* eof
