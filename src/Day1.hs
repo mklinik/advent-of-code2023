@@ -38,9 +38,9 @@ ns :: [Tok] -> String
 ns toks = [n | N n <- toks]
 
 evalLine :: [Tok] -> Int
-evalLine toks = read $ [head foo] <> [head (reverse foo)]
+evalLine toks = read [head digits, last digits]
   where
-  foo = ns toks
+  digits = ns toks
 
 day1P :: Parser [[Tok]]
 day1P = many (many tokenP <* single '\n') <* eof
