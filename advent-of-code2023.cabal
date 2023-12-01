@@ -27,6 +27,7 @@ library
   exposed-modules:
       Day1
       Lib
+      Util
   other-modules:
       Paths_advent_of_code2023
   autogen-modules:
