@@ -33,13 +33,10 @@ token1_2P =
   <|> C <$> oneOf ['a'..'z']
   <|> N <$> oneOf ['0'..'9']
   where
-  spelledNumber word = (lookAhead (chunk word) *> takeP Nothing 1)
-
-lineP :: Parser [Tok]
-lineP = many tokenP <* single '\n'
+  spelledNumber word = lookAhead (chunk word) *> takeP (Just "spelled number") 1
 
 day1P :: Parser [[Tok]]
-day1P = many lineP <* eof
+day1P = many (many tokenP <* single '\n') <* eof
 
 day1_2P :: Parser [[Tok]]
 day1_2P = many ((many token1_2P) <* single '\n') <* eof
