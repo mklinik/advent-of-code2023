@@ -26,6 +26,7 @@ source-repository head
 library
   exposed-modules:
       Day1
+      Day2
       Lib
       Util
   other-modules:
@@ -60,6 +61,7 @@ test-suite advent-of-code2023-test
   main-is: Spec.hs
   other-modules:
       Day1Spec
+      Day2Spec
       Paths_advent_of_code2023
   autogen-modules:
       Paths_advent_of_code2023
