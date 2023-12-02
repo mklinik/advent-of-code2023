@@ -65,7 +65,7 @@ minimumPossibleGame (gameNo, draws) = (gameNo, foldr mergeWithMax Map.empty $ ma
 mergeWithMax l r = merge preserveMissing preserveMissing (zipWithAMatched $ \_k x y -> Identity $ max x y) l r
 
 power :: Map Color Int -> Int
-power m = foldl (*) 1 [n | (_, n) <- Map.toList m]
+power m = product [n | (_, n) <- Map.toList m]
 
 gamePower :: Game -> Int
 gamePower = power . snd . minimumPossibleGame
