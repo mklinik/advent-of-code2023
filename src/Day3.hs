@@ -14,8 +14,7 @@ day3 input = sum partNumbers
   partNumbers =
     [ value
     | n@(Number _ value _) <- numbers
-    , s <- symbols
-    , isAdjacent s n
+    , any (flip isAdjacent n) symbols
     ]
 
 day3_2 :: String -> Int
