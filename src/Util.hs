@@ -17,3 +17,12 @@ numP = read <$> takeWhile1P (Just "number") isDigit
 
 ws :: Parser ()
 ws = void $ takeWhile1P (Just "whitespace") isSpace
+
+space :: Parser ()
+space = void $ single ' '
+
+nl :: Parser ()
+nl = void $ single '\n'
+
+kebabIdentifier :: Parser String
+kebabIdentifier = takeWhile1P (Just "identifier") $ flip elem $ ['a'..'z']<>['-']
