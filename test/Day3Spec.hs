@@ -9,7 +9,7 @@ import Day3
 import Util
 
 spec :: Spec
-spec = fdescribe "Day3" $ do
+spec = describe "Day3" $ do
   it "parses tokens" $ do
     myParse tokenP "123" `shouldBe` N (Number (1,1) 123 (1,4))
     myParse tokenP "." `shouldBe` Dot

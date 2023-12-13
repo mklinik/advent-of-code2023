@@ -26,8 +26,10 @@ source-repository head
 library
   exposed-modules:
       Day1
+      Day12
       Day2
       Day3
+      Day4
       Day5
       Lib
       Util
@@ -64,9 +66,11 @@ test-suite advent-of-code2023-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      Day12Spec
       Day1Spec
       Day2Spec
       Day3Spec
+      Day4Spec
       Day5Spec
       Paths_advent_of_code2023
   autogen-modules:
