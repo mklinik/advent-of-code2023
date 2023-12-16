@@ -9,7 +9,7 @@ import Day4
 import Util
 
 spec :: Spec
-spec = fdescribe "Day4" $ do
+spec = describe "Day4" $ do
   it "parses a card" $ do
     myParse cardP "Card 1: 1 2 | 3 4" `shouldBe` (1, ([1, 2],[3, 4]))
 

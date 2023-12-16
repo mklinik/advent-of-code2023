@@ -4,6 +4,8 @@ import Text.Megaparsec
 import Data.Void
 import Data.Char
 import Data.Functor
+import System.CPUTime
+import System.IO.Unsafe
 
 type Parser a = Parsec Void String a
 
@@ -26,3 +28,12 @@ nl = void $ single '\n'
 
 kebabIdentifier :: Parser String
 kebabIdentifier = takeWhile1P (Just "identifier") $ flip elem $ ['a'..'z']<>['-']
+
+time :: (Show a) => a -> a
+time x = unsafePerformIO $ do
+  start <- getCPUTime
+  print x
+  end <- getCPUTime
+  let elapsedSec = fromIntegral (end - start) / (10^12)
+  putStrLn $ "elapsed: " <> show elapsedSec <> " s"
+  return x
