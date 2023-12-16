@@ -8,6 +8,8 @@ import qualified Data.MultiSet as MultiSet
 
 import Util
 
+-- credits for this solution goes to https://github.com/clrfl/AdventOfCode2023/blob/master/12/explanation.ipynb
+
 day12 :: String -> Int
 day12 input = time $ sum $ map evalRow $ myParse day12P input
 
