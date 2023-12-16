@@ -39,6 +39,8 @@ day12P = many (rowP <* single '\n')
 type St = [MyState]
 type NFA = St -> Char -> [St]
 
+-- the number of possibilities is the number of occurrences of the final state in the multiset of
+-- the NFA
 evalRow :: Row -> Int
 evalRow (record, report) = MultiSet.occur finalState $ process (mkInitialState report) record
 
