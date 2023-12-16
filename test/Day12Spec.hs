@@ -19,12 +19,12 @@ spec = fdescribe "day 12" $ do
     day12 input `shouldBe` 21
 
   it "evals a state" $ do
-    mkNFA [1] `shouldBe` [Dot,Hash 1]
-    step (mkNFA [1]) '.' `shouldBe` [[Dot,Hash 1]]
-    step (mkNFA [1]) '#' `shouldBe` [[Hash 1]]
+    mkInitialState [1] `shouldBe` [Dot,Hash 1]
+    step (mkInitialState [1]) '.' `shouldBe` [[Dot,Hash 1]]
+    step (mkInitialState [1]) '#' `shouldBe` [[Hash 1]]
 
   it "runs an automaton" $ do
-    MultiSet.occur [Hash 1] (process (mkNFA [1]) "..#") `shouldBe` 1
+    MultiSet.occur finalState (process (mkInitialState [1]) "..#") `shouldBe` 1
     evalRow (myParse rowP ".#. 1") `shouldBe` 1
     evalRow (myParse rowP ".#. 1") `shouldBe` 1
     evalRow (myParse rowP "#.#.### 1,1,3") `shouldBe` 1

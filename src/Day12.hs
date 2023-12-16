@@ -40,7 +40,7 @@ type St = [MyState]
 type NFA = St -> Char -> [St]
 
 evalRow :: Row -> Int
-evalRow (record, report) = MultiSet.occur [Hash 1] $ process (mkNFA report) record
+evalRow (record, report) = MultiSet.occur finalState $ process (mkInitialState report) record
 
 delta :: NFA -> MultiSet St -> Char -> MultiSet St
 delta automaton states input = MultiSet.concatMap (\s -> automaton s input) states
@@ -51,11 +51,10 @@ process initialState input = foldl (delta step) (MultiSet.singleton initialState
 data MyState = Dot | Hash Int
   deriving (Show, Eq, Ord)
 
-mkNFA :: DamageReport -> St
-mkNFA report = ([Dot] <> intersperse Dot hashStates)
-  where
-  hashStates :: [MyState]
-  hashStates = map Hash report
+mkInitialState :: DamageReport -> St
+mkInitialState report = concat [ [Dot, Hash n] | n <- report ]
+
+finalState = [Hash 1]
 
 step :: NFA
 step [] _ = error "should never happen: exhausted states"
