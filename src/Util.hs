@@ -6,6 +6,7 @@ import Data.Char
 import Data.Functor
 import System.CPUTime
 import System.IO.Unsafe
+import Text.Printf
 
 type Parser a = Parsec Void String a
 
@@ -35,5 +36,9 @@ time x = unsafePerformIO $ do
   print x
   end <- getCPUTime
   let elapsedSec = fromIntegral (end - start) / (10^12)
-  putStrLn $ "elapsed: " <> show elapsedSec <> " s"
+  printf "elapsed: %.3f s\n" (elapsedSec :: Double)
   return x
+
+comb :: Int -> [a] -> [[a]]
+comb 0 _ = [[]]
+comb n r = [i:s | i <- r, s <- comb (n-1) r]

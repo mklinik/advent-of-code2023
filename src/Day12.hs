@@ -3,56 +3,78 @@ module Day12 where
 import Text.Megaparsec
 import Data.List
 import Debug.Trace
+import Data.MultiSet (MultiSet)
+import qualified Data.MultiSet as MultiSet
 
 import Util
 
 day12 :: String -> Int
-day12 input = sum $ map (time . solveRow) $ myParse day12P input
+day12 input = time $ sum $ map evalRow $ myParse day12P input
 
-data Condition = O | D | U
-  deriving (Show, Eq)
+day12_2 :: String -> Int
+day12_2 input = sum $ map evalRow $ map unfoldRow $ myParse day12P input
 
-type ConditionRecord = [Condition]
+unfoldRow :: Row -> Row
+unfoldRow (record, report) = (intercalate "?" (replicate 5 record), concat $ replicate 5 report)
 
+type ConditionRecord = String
 type DamageReport = [Int]
 
-conditionP :: Parser Condition
-conditionP =
-      O <$ single '.'
-  <|> D <$ single '#'
-  <|> U <$ single '?'
-
-conditionRecordP :: Parser ConditionRecord
-conditionRecordP = many conditionP
+conditionRecordP :: Parser String
+conditionRecordP = takeWhileP Nothing (`elem` ".#?")
 
 damageReportP :: Parser DamageReport
 damageReportP = numP `sepBy` single ','
 
-rowP :: Parser (ConditionRecord, DamageReport)
+type Row = (ConditionRecord, DamageReport)
+
+rowP :: Parser Row
 rowP = (,) <$> conditionRecordP <* ws <*> damageReportP
 
-day12P :: Parser [(ConditionRecord, DamageReport)]
+day12P :: Parser [Row]
 day12P = many (rowP <* single '\n')
 
-mkReport :: ConditionRecord -> DamageReport
-mkReport cs = map length damagedGroups
-  where
-  damagedGroups = filter (\gr -> head gr == D) groups
-  groups = group cs
+type St = [MyState]
+type NFA = St -> Char -> [St]
 
-comb :: Int -> [a] -> [[a]]
-comb 0 _ = [[]]
-comb n r = [i:s | i <- r, s <- comb (n-1) r]
+evalRow :: Row -> Int
+evalRow (record, report) = MultiSet.occur [Hash 1] $ process (mkNFA report) record
 
-fillRecord :: [Condition] -> ConditionRecord -> ConditionRecord
-fillRecord values conditionRecord = go [] values conditionRecord
-  where
-  go acc _ [] = reverse acc
-  go acc (v:vs) (U:cs) = go (v:acc) vs cs
-  go acc vs (c:cs) = go (c:acc) vs cs
+delta :: NFA -> MultiSet St -> Char -> MultiSet St
+delta automaton states input = MultiSet.concatMap (\s -> automaton s input) states
 
-solveRow :: (ConditionRecord, DamageReport) -> Int
-solveRow (cs, givenReport) = length $ filter (\fill -> mkReport (fillRecord fill cs) == givenReport) $ possibleFills
+process :: St -> String -> MultiSet St
+process initialState input = foldl (delta step) (MultiSet.singleton initialState) input
+
+data MyState = Dot | Hash Int
+  deriving (Show, Eq, Ord)
+
+mkNFA :: DamageReport -> St
+mkNFA report = ([Dot] <> intersperse Dot hashStates)
   where
-  numUnknowns = length $ filter (==U) cs
-  possibleFills = comb numUnknowns [O, D]
+  hashStates :: [MyState]
+  hashStates = map Hash report
+
+step :: NFA
+step [] _ = error "should never happen: exhausted states"
+step s@(Dot:rest) input =
+  case input of
+    '.' -> [s]
+    '#' -> [rest]
+    '?' -> [s, rest]
+step s@(Hash 1:[]) input =  -- final state
+  case input of
+    '#' -> []
+    '.' -> [s]
+    '?' -> [s]
+step s@(Hash n:rest) input
+  | n > 1 =
+    case input of
+      '.' -> []
+      '#' -> [Hash (n-1):rest]
+      '?' -> [Hash (n-1):rest]
+  | n == 1 =
+    case input of
+      '.' -> [rest]
+      '#' -> []
+      '?' -> [rest]
