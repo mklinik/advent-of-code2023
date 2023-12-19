@@ -114,7 +114,7 @@ execute board startBeam = Set.size $ Set.map pos $ go Set.empty (Set.singleton s
     in
       if newAcc == acc
       then acc
-      else go newAcc newBeams
+      else go newAcc (newBeams Set.\\ acc)
 
 boardDimensions :: Board -> (Int, Int)
 boardDimensions board = maximum $ map fst $ Map.toList board
