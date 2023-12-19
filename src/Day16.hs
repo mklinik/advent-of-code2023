@@ -7,11 +7,19 @@ import Data.Map (Map)
 import qualified Data.Set as Set
 import Data.Set (Set)
 import Data.Maybe
+import Debug.Trace
 
 import Util
 
 day16 :: String -> Int
-day16 input = execute $ myParse boardP input
+day16 input = execute (myParse boardP input) (Beam (1,1) R)
+
+day16_2 :: String -> Int
+day16_2 input = maximum $ map run $ zip [1..] $ possibleStarts board
+  where
+  board = myParse boardP input
+  run :: (Int, Beam) -> Int
+  run (n, startBeam) = time $ execute board (trace (show n) startBeam)
 
 type Board = Map (Int, Int) Char
 
@@ -96,8 +104,8 @@ stepBeam board beam = Set.fromList $ catMaybes $ map (shine board) $
 step :: Board -> Configuration -> Configuration
 step board beams = Set.unions $ Set.map (stepBeam board) beams
 
-execute :: Board -> Int
-execute board = Set.size $ Set.map pos $ go Set.empty (Set.singleton (Beam (1,1) R))
+execute :: Board -> Beam -> Int
+execute board startBeam = Set.size $ Set.map pos $ go Set.empty (Set.singleton startBeam)
   where
   go acc beams =
     let
@@ -107,3 +115,15 @@ execute board = Set.size $ Set.map pos $ go Set.empty (Set.singleton (Beam (1,1)
       if newAcc == acc
       then acc
       else go newAcc newBeams
+
+boardDimensions :: Board -> (Int, Int)
+boardDimensions board = maximum $ map fst $ Map.toList board
+
+possibleStarts :: Board -> [Beam]
+possibleStarts board = fromLeft <> fromRight <> fromTop <> fromBot
+  where
+  (maxX, maxY) = boardDimensions board
+  fromLeft = [Beam (1, y) R | y <- [1..maxY]]
+  fromRight = [Beam (maxX, y) L | y <- [1..maxY]]
+  fromTop = [Beam (x, 1) D | x <- [1..maxX]]
+  fromBot = [Beam (x, maxY) U | x <- [1..maxX]]

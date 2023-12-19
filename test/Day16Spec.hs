@@ -33,4 +33,26 @@ spec = fdescribe "day16" $ do
 
   it "solves the example" $ do
     input <- liftIO $ readFile "day16example.txt"
-    execute (myParse boardP input) `shouldBe` 46
+    execute (myParse boardP input) (Beam (1,1) R) `shouldBe` 46
+
+  it "calculates the right board dimensions of the example" $ do
+    input <- liftIO $ readFile "day16example.txt"
+    let
+      board = myParse boardP input
+    boardDimensions board `shouldBe` (10, 10)
+
+  it "calculates the right board dimensions of the input" $ do
+    input <- liftIO $ readFile "day16.txt"
+    let
+      board = myParse boardP input
+    boardDimensions board `shouldBe` (110, 110)
+
+  it "calculates the correct starting positions" $ do
+    board <- liftIO $ myParse boardP <$> readFile "day16example.txt"
+    possibleStarts board `shouldSatisfy` \l -> length l == 40
+    boardReal <- liftIO $ myParse boardP <$> readFile "day16.txt"
+    possibleStarts boardReal `shouldSatisfy` \l -> length l == 440
+
+  it "solves part 2 example" $ do
+    input <- liftIO $ readFile "day16example.txt"
+    day16_2 input `shouldBe` 51
