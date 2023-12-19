@@ -27,6 +27,7 @@ library
   exposed-modules:
       Day1
       Day12
+      Day16
       Day2
       Day3
       Day4
@@ -69,6 +70,7 @@ test-suite advent-of-code2023-test
   main-is: Spec.hs
   other-modules:
       Day12Spec
+      Day16Spec
       Day1Spec
       Day2Spec
       Day3Spec

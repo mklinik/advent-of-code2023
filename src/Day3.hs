@@ -29,17 +29,6 @@ day3_2 input = sum [n1 * n2 | (n1, n2) <- gears]
     , [Number _ n1 _, Number _ n2 _] <- [filter (isAdjacent s) numbers]
     ]
 
-type MySourcePos = (Int, Int)
-
-mkMyPos :: SourcePos -> MySourcePos
-mkMyPos p = (line, col)
-  where
-  line = unPos $ sourceLine p
-  col = unPos $ sourceColumn p
-
-myPosP :: Parser MySourcePos
-myPosP = mkMyPos <$> getSourcePos
-
 data Number = Number MySourcePos Int MySourcePos
   deriving (Show, Eq)
 

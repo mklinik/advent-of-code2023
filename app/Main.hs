@@ -1,9 +1,9 @@
 module Main (main) where
 
-import Day12
+import Day16
 import Util
 
 main :: IO ()
 main = do
-  input <- readFile "day12.txt"
-  print $ time $ day12_2 input
+  input <- readFile "day16.txt"
+  print $ time $ day16 input

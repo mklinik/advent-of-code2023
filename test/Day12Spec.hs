@@ -8,7 +8,7 @@ import Day12
 import Util
 
 spec :: Spec
-spec = fdescribe "day 12" $ do
+spec = describe "day 12" $ do
   it "parses some tokens" $ do
     myParse conditionRecordP "???.###" `shouldBe` "???.###"
     myParse damageReportP "1,1,3" `shouldBe` [1,1,3]

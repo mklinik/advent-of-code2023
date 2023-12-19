@@ -27,6 +27,19 @@ space = void $ single ' '
 nl :: Parser ()
 nl = void $ single '\n'
 
+type MySourcePos = (Int, Int)
+
+mkMyPos :: SourcePos -> MySourcePos
+mkMyPos p = (line, col)
+  where
+  line = unPos $ sourceLine p
+  col = unPos $ sourceColumn p
+
+myPosP :: Parser MySourcePos
+myPosP = mkMyPos <$> getSourcePos
+
+swap (a, b) = (b, a)
+
 kebabIdentifier :: Parser String
 kebabIdentifier = takeWhile1P (Just "identifier") $ flip elem $ ['a'..'z']<>['-']
 
