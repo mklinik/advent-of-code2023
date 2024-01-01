@@ -43,6 +43,9 @@ swap (a, b) = (b, a)
 kebabIdentifier :: Parser String
 kebabIdentifier = takeWhile1P (Just "identifier") $ flip elem $ ['a'..'z']<>['-']
 
+identifier :: Parser String
+identifier = takeWhile1P (Just "identifier") $ flip elem $ ['a'..'z']
+
 time :: (Show a) => a -> a
 time x = unsafePerformIO $ do
   start <- getCPUTime

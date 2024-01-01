@@ -10,7 +10,7 @@ import Day16
 import Util
 
 spec :: Spec
-spec = fdescribe "day16" $ do
+spec = describe "day16" $ do
   it "parses the example board" $ do
     input <- liftIO $ readFile "day16example.txt"
     let board = myParse boardP input
