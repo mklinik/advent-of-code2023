@@ -31,14 +31,11 @@ spec = describe "Day4" $ do
 
   it "eval2 a card" $ do
     input <- liftIO $ readFile "day4example.txt"
-    let original = myParse day4P input
-    map fst (evalCard2 original (head original)) `shouldBe` [2, 3, 4, 5]
+    let card1:card2:card3:card4:card5:card6:_ = myParse day4P input
+    winnings card1 `shouldBe` (1, [2, 3, 4, 5])
+    winnings card2 `shouldBe` (2, [3, 4])
+    winnings card6 `shouldBe` (6, [])
 
   it "solves the example 2" $ do
     input <- liftIO $ readFile "day4example.txt"
-    day4_2 input `shouldBe` 30
-
-  it "solves part 2" $ do
-    pendingWith "let's not do that here"
-    input <- liftIO $ readFile "day4.txt"
     day4_2 input `shouldBe` 30

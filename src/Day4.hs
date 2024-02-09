@@ -4,16 +4,24 @@ import Text.Megaparsec
 import Data.Char
 import qualified Data.Set as Set
 import Data.Maybe
+import qualified Data.Map as Map
+import Data.Map (Map)
 
 import Util
+
+import Debug.Trace as Debug
 
 day4 :: String -> Integer
 day4 input = sum $ map evalCard $ myParse day4P input
 
 day4_2 :: String -> Int
-day4_2 input = length $ evalPuzzle2 $ myParse day4P input
+day4_2 input = length table + sum [evalCard2 cards wonCard | (wonCard, _) <- table]
+  where
+  table = map winnings $ myParse day4P input
+  cards = mkCards table
 
 type Card = (Int, ([Integer], [Integer]))
+type Card2 = (Int, [Int])
 
 cardP :: Parser Card
 cardP = do
@@ -33,19 +41,20 @@ evalCard (_, (winningNumbers, yourNumbers)) = if s == 0 then 0 else 2 ^ (s - 1)
   yourWinningNumbers = Set.intersection (Set.fromList winningNumbers) (Set.fromList yourNumbers)
   s = Set.size yourWinningNumbers
 
-evalCard2 :: [Card] -> Card -> [Card]
-evalCard2 original (cardNo, (winningNumbers, yourNumbers)) =
-  [ (c, x)
-  | c <- cardsWon
-  , Just x <- [lookup c original]
-  ]
+winnings :: Card -> Card2
+winnings (cardNo, (winningNumbers, yourNumbers)) = (cardNo, wonCards)
   where
+  wonCards = [cardNo+1 .. (cardNo+s)]
   yourWinningNumbers = Set.intersection (Set.fromList winningNumbers) (Set.fromList yourNumbers)
   s = Set.size yourWinningNumbers
-  cardsWon = if s == 0 then [] else [cardNo+1..cardNo+s]
 
-evalPuzzle2 :: [Card] -> [Card]
-evalPuzzle2 original = go original []
+type Cards = Map Int [Int]
+
+mkCards :: [Card2] -> Cards
+mkCards = Map.fromList
+
+evalCard2 :: Cards -> Int -> Int
+evalCard2 cards cardNo = length cardsWon + sum recur
   where
-  go [] acc = acc
-  go (c:cs) acc = go (cs <> evalCard2 original c) (c:acc)
+  cardsWon = fromMaybe [] $ Map.lookup cardNo cards
+  recur = [evalCard2 cards wonCard | wonCard <- cardsWon]
