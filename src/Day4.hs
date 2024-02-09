@@ -15,7 +15,7 @@ day4 :: String -> Integer
 day4 input = sum $ map evalCard $ myParse day4P input
 
 day4_2 :: String -> Int
-day4_2 input = length table + sum [evalCard2 cards wonCard | (wonCard, _) <- table]
+day4_2 input = evalCard2 cards (map fst table)
   where
   table = map winnings $ myParse day4P input
   cards = mkCards table
@@ -53,8 +53,11 @@ type Cards = Map Int [Int]
 mkCards :: [Card2] -> Cards
 mkCards = Map.fromList
 
-evalCard2 :: Cards -> Int -> Int
-evalCard2 cards cardNo = length cardsWon + sum recur
+evalCard2 :: Cards -> [Int] -> Int
+evalCard2 cards cardsWon = length cardsWon + sum recurse
   where
-  cardsWon = fromMaybe [] $ Map.lookup cardNo cards
-  recur = [evalCard2 cards wonCard | wonCard <- cardsWon]
+  recurse :: [Int]
+  recurse =
+    [ evalCard2 cards $ fromMaybe [] $ Map.lookup wonCard cards
+    | wonCard <- cardsWon
+    ]
