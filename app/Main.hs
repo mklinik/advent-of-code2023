@@ -1,15 +1,12 @@
 module Main (main) where
 
-import Day8
+import Day9
 import Util
-import Data.List
 
 main :: IO ()
 main = do
-  input <- readFile "day8.txt"
-  let puzzle@Puzzle{..} = myParse puzzleP input
-      startState = [name | Node{..} <- network, "A" `isSuffixOf` name]
-  print startState
-  -- print $ singleLoop puzzle "LJA"
-  print $ map (time . singleLoop puzzle) startState
-  -- print $ time $ day8 input
+  input <- readFile "day9.txt"
+  print $ day9_2 input
+  -- let input = myParse lineP "10 13 16 21 30 45"
+  -- mapM_ print $ map head $ allDeltas input
+  -- print $ extrapolateBackward input

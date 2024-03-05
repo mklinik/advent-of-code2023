@@ -36,6 +36,7 @@ library
       Day6
       Day7
       Day8
+      Day9
       Lib
       Util
   other-modules:
@@ -92,6 +93,7 @@ test-suite advent-of-code2023-test
       Day6Spec
       Day7Spec
       Day8Spec
+      Day9Spec
       Paths_advent_of_code2023
   autogen-modules:
       Paths_advent_of_code2023

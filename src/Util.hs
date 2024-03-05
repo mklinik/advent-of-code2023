@@ -16,7 +16,7 @@ myParse parser input = case parse parser "input" input of
   Left err -> error $ errorBundlePretty err
 
 numP :: (Num a, Read a) => Parser a
-numP = read <$> takeWhile1P (Just "number") isDigit
+numP = read <$> takeWhile1P (Just "number") (\c -> isDigit c || c == '-')
 
 ws :: Parser ()
 ws = void $ takeWhile1P (Just "whitespace") isSpace
